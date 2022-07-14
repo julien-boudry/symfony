@@ -33,7 +33,7 @@ class ColorTest extends TestCase
 
     public function testTrueColors()
     {
-        if ('truecolor' !== getenv('COLORTERM')) {
+        if ('Ansi24' !== Color::getTermColorSupport()) {
             $this->markTestSkipped('True color not supported.');
         }
 
@@ -47,9 +47,12 @@ class ColorTest extends TestCase
     public function testDegradedTrueColors()
     {
         $colorterm = getenv('COLORTERM');
+        $term = getenv('TERM');
         putenv('COLORTERM=');
+        putenv('TERM=');
 
         try {
+            // To Ansi4
             $color = new Color('#f00', '#ff0');
             $this->assertSame("\033[31;43m \033[39;49m", $color->apply(' '));
 
@@ -57,6 +60,7 @@ class ColorTest extends TestCase
             $this->assertSame("\033[31;43m \033[39;49m", $color->apply(' '));
         } finally {
             putenv('COLORTERM='.$colorterm);
+            putenv('TERM='.$term);
         }
     }
 }

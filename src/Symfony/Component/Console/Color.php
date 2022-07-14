@@ -154,6 +154,10 @@ final class Color
             return (string) $this->degradeHexColorToAnsi4($r, $g, $b);
         }
 
+        if ('Ansi8' === $termSupport) {
+            return '8;5;'.((string) $this->degradeHexColorToAnsi8($r, $g, $b));
+        }
+
         // Ansi24 true color
         return sprintf('8;2;%d;%d;%d', $r, $g, $b);
     }
@@ -166,10 +170,19 @@ final class Color
             return 'Ansi24';
         }
 
+        if ('256color' === $colorterm) {
+            return 'Ansi8';
+        }
+
         $term = getenv('TERM');
+
         if (false !== $term) {
             if (str_contains($term, 'truecolor')) {
                 return 'Ansi24';
+            }
+
+            if (str_contains($term, '256color')) {
+                return 'Ansi8';
             }
         }
 
@@ -183,6 +196,29 @@ final class Color
         }
 
         return (round($b / 255) << 2) | (round($g / 255) << 1) | round($r / 255);
+    }
+
+    /**
+     * Inspired from https://github.com/ajalt/colormath/blob/e464e0da1b014976736cf97250063248fc77b8e7/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/Ansi256.kt code (MIT license)
+    */
+    private function degradeHexColorToAnsi8(int $r, int $g, int $b): int
+    {
+        if ($r === $g && $g === $b) {
+            if ($r < 8) {
+               return 16;
+            }
+            elseif ($r > 248) {
+                return 231;
+            }
+            else {
+                return intval(round((($r - 8) / 247) * 24)) + 232;
+            }
+        } else {
+            return 16 +
+                    (36 * intval(round($r / 255 * 5))) +
+                    (6 * intval(round($g / 255 * 5))) +
+                    intval(round($b / 255 * 5));
+        }
     }
 
     private function getSaturation(int $r, int $g, int $b): int

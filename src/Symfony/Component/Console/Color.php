@@ -199,25 +199,23 @@ final class Color
     }
 
     /**
-     * Inspired from https://github.com/ajalt/colormath/blob/e464e0da1b014976736cf97250063248fc77b8e7/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/Ansi256.kt code (MIT license)
-    */
+     * Inspired from https://github.com/ajalt/colormath/blob/e464e0da1b014976736cf97250063248fc77b8e7/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/Ansi256.kt code (MIT license).
+     */
     private function degradeHexColorToAnsi8(int $r, int $g, int $b): int
     {
         if ($r === $g && $g === $b) {
             if ($r < 8) {
-               return 16;
-            }
-            elseif ($r > 248) {
+                return 16;
+            } elseif ($r > 248) {
                 return 231;
-            }
-            else {
-                return intval(round((($r - 8) / 247) * 24)) + 232;
+            } else {
+                return (int) (round((($r - 8) / 247) * 24)) + 232;
             }
         } else {
             return 16 +
-                    (36 * intval(round($r / 255 * 5))) +
-                    (6 * intval(round($g / 255 * 5))) +
-                    intval(round($b / 255 * 5));
+                    (36 * (int) (round($r / 255 * 5))) +
+                    (6 * (int) (round($g / 255 * 5))) +
+                    (int) (round($b / 255 * 5));
         }
     }
 

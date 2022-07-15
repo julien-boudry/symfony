@@ -17,6 +17,38 @@ class Terminal
     private static ?int $height = null;
     private static ?bool $stty = null;
 
+    /*
+     * About Ansi color types: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+     * For more information about true color support with terminals https://github.com/termstandard/colors/
+     */
+    public static function getTermColorSupport(): string
+    {
+        $colorterm = getenv('COLORTERM');
+
+        if ('truecolor' === $colorterm) {
+            return 'Ansi24';
+        }
+
+        if ('256color' === $colorterm) {
+            return 'Ansi8';
+        }
+
+        $term = getenv('TERM');
+
+        if (false !== $term) {
+            if (str_contains($term, 'truecolor')) {
+                return 'Ansi24';
+            }
+
+            if (str_contains($term, '256color')) {
+                return 'Ansi8';
+            }
+        }
+
+        return 'Ansi4';
+    }
+
+
     /**
      * Gets the terminal width.
      */

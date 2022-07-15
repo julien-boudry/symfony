@@ -13,6 +13,7 @@ namespace Symfony\Component\Console\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Color;
+use Symfony\Component\Console\Terminal;
 
 class ColorTest extends TestCase
 {
@@ -33,7 +34,7 @@ class ColorTest extends TestCase
 
     public function testTrueColors()
     {
-        if ('Ansi24' !== Color::getTermColorSupport()) {
+        if ('Ansi24' !== Terminal::getTermColorSupport()) {
             $this->markTestSkipped('True color not supported.');
         }
 

@@ -147,8 +147,7 @@ final class Color
         $g = ($color >> 8) & 255;
         $b = $color & 255;
 
-        // see https://github.com/termstandard/colors/ for more information about true color support
-        $termSupport = self::getTermColorSupport();
+        $termSupport = Terminal::getTermColorSupport();
 
         if ('Ansi4' === $termSupport) {
             return (string) $this->degradeHexColorToAnsi4($r, $g, $b);
@@ -160,33 +159,6 @@ final class Color
 
         // Ansi24 true color
         return sprintf('8;2;%d;%d;%d', $r, $g, $b);
-    }
-
-    public static function getTermColorSupport(): string
-    {
-        $colorterm = getenv('COLORTERM');
-
-        if ('truecolor' === $colorterm) {
-            return 'Ansi24';
-        }
-
-        if ('256color' === $colorterm) {
-            return 'Ansi8';
-        }
-
-        $term = getenv('TERM');
-
-        if (false !== $term) {
-            if (str_contains($term, 'truecolor')) {
-                return 'Ansi24';
-            }
-
-            if (str_contains($term, '256color')) {
-                return 'Ansi8';
-            }
-        }
-
-        return 'Ansi4';
     }
 
     private function degradeHexColorToAnsi4(int $r, int $g, int $b): int

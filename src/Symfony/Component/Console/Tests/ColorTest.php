@@ -34,15 +34,18 @@ class ColorTest extends TestCase
 
     public function testTrueColors()
     {
-        if ('Ansi24' !== Terminal::getTermColorSupport()) {
-            $this->markTestSkipped('True color not supported.');
+        $colorterm = getenv('COLORTERM');
+        putenv('COLORTERM=truecolor');
+
+        try {
+            $color = new Color('#fff', '#000');
+            $this->assertSame("\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m", $color->apply(' '));
+
+            $color = new Color('#ffffff', '#000000');
+            $this->assertSame("\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m", $color->apply(' '));
+        } finally {
+            (false !== $colorterm) ? putenv('COLORTERM='.$colorterm) : putenv('COLORTERM');
         }
-
-        $color = new Color('#fff', '#000');
-        $this->assertSame("\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m", $color->apply(' '));
-
-        $color = new Color('#ffffff', '#000000');
-        $this->assertSame("\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m", $color->apply(' '));
     }
 
     public function testDegradedTrueColors()
@@ -75,8 +78,8 @@ class ColorTest extends TestCase
             $color = new Color('#000000', '#ffffff');
             $this->assertSame("\033[38;5;16;48;5;231m \033[39;49m", $color->apply(' '));
         } finally {
-            putenv('COLORTERM='.$colorterm);
-            putenv('TERM='.$term);
+            (false !== $colorterm) ? putenv('COLORTERM='.$colorterm) : putenv('COLORTERM');
+            (false !== $term) ? putenv('TERM='.$term) : putenv('TERM');
         }
     }
 }

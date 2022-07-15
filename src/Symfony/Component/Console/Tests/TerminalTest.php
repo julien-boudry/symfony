@@ -93,4 +93,47 @@ class TerminalTest extends TestCase
         $terminal = new Terminal();
         $this->assertSame((int) $matches[1], $terminal->getWidth());
     }
+
+    public function testGetTermColorSupport()
+    {
+        $colorterm = getenv('COLORTERM');
+        $term = getenv('TERM');
+
+        try {
+            putenv('COLORTERM=truecolor');
+            putenv('TERM');
+            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM=TRUECOLOR');
+            putenv('TERM');
+            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM=somethingLike256Color');
+            putenv('TERM');
+            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM');
+            putenv('TERM=xterm-truecolor');
+            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM');
+            putenv('TERM=xterm-trueColor');
+            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM');
+            putenv('TERM=xterm-256color');
+            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM');
+            putenv('TERM=xterm-256COLOR');
+            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+
+            putenv('COLORTERM');
+            putenv('TERM');
+            $this->assertSame('Ansi4', Terminal::getTermColorSupport());
+        } finally {
+            (false !== $colorterm) ? putenv('COLORTERM='.$colorterm) : putenv('COLORTERM');
+            (false !== $term) ? putenv('TERM='.$term) : putenv('TERM');
+        }
+    }
 }

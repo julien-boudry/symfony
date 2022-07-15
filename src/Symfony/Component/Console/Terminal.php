@@ -23,19 +23,23 @@ class Terminal
      */
     public static function getTermColorSupport(): string
     {
-        $colorterm = getenv('COLORTERM');
+        // Try with $COLORTERM first
+        if (\is_string($colorterm = getenv('COLORTERM'))) {
+            $colorterm = strtolower($colorterm);
 
-        if ('truecolor' === $colorterm) {
-            return 'Ansi24';
+            if (str_contains($colorterm, 'truecolor')) {
+                return 'Ansi24';
+            }
+
+            if (str_contains($colorterm, '256color')) {
+                return 'Ansi8';
+            }
         }
 
-        if ('256color' === $colorterm) {
-            return 'Ansi8';
-        }
+        // Try with $TERM
+        if (\is_string($term = getenv('TERM'))) {
+            $term = strtolower($term);
 
-        $term = getenv('TERM');
-
-        if (false !== $term) {
             if (str_contains($term, 'truecolor')) {
                 return 'Ansi24';
             }
@@ -47,7 +51,6 @@ class Terminal
 
         return 'Ansi4';
     }
-
 
     /**
      * Gets the terminal width.

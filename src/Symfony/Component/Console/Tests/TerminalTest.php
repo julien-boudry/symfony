@@ -104,8 +104,8 @@ class TerminalTest extends TestCase
         $oriTerm = getenv('TERM');
 
         try {
-            putenv($testColorTerm ? "COLORTERM={$testColorTerm}" : "COLORTERM");
-            putenv($testTerm ? "TERM={$testTerm}" : "TERM");
+            putenv($testColorTerm ? "COLORTERM={$testColorTerm}" : 'COLORTERM');
+            putenv($testTerm ? "TERM={$testTerm}" : 'TERM');
 
             $this->assertSame($expected, Terminal::getTermColorSupport());
         } finally {

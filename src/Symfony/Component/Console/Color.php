@@ -12,7 +12,6 @@
 namespace Symfony\Component\Console;
 
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Output\AnsiColor;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -128,7 +127,7 @@ final class Color
                 throw new InvalidArgumentException(sprintf('Invalid "%s" color.', $color));
             }
 
-            return ($background ? '4' : '3').$this->convertHexColorToAnsi(hexdec($color));
+            return ($background ? '4' : '3').Terminal::getTermColorSupport()->convertFromHexToAnsiColorCode($color);
         }
 
         if (isset(self::COLORS[$color])) {
@@ -140,69 +139,5 @@ final class Color
         }
 
         throw new InvalidArgumentException(sprintf('Invalid "%s" color; expected one of (%s).', $color, implode(', ', array_merge(array_keys(self::COLORS), array_keys(self::BRIGHT_COLORS)))));
-    }
-
-    private function convertHexColorToAnsi(int $color): string
-    {
-        $r = ($color >> 16) & 255;
-        $g = ($color >> 8) & 255;
-        $b = $color & 255;
-
-        $termSupport = Terminal::getTermColorSupport();
-
-        if (AnsiColor::Ansi4 === $termSupport) {
-            return (string) $this->degradeHexColorToAnsi4($r, $g, $b);
-        }
-
-        if (AnsiColor::Ansi8 === $termSupport) {
-            return '8;5;'.((string) $this->degradeHexColorToAnsi8($r, $g, $b));
-        }
-
-        // Ansi24 true color
-        return sprintf('8;2;%d;%d;%d', $r, $g, $b);
-    }
-
-    private function degradeHexColorToAnsi4(int $r, int $g, int $b): int
-    {
-        if (0 === round($this->getSaturation($r, $g, $b) / 50)) {
-            return 0;
-        }
-
-        return (round($b / 255) << 2) | (round($g / 255) << 1) | round($r / 255);
-    }
-
-    /**
-     * Inspired from https://github.com/ajalt/colormath/blob/e464e0da1b014976736cf97250063248fc77b8e7/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/Ansi256.kt code (MIT license).
-     */
-    private function degradeHexColorToAnsi8(int $r, int $g, int $b): int
-    {
-        if ($r === $g && $g === $b) {
-            if ($r < 8) {
-                return 16;
-            } elseif ($r > 248) {
-                return 231;
-            } else {
-                return (int) (round((($r - 8) / 247) * 24)) + 232;
-            }
-        } else {
-            return 16 +
-                    (36 * (int) (round($r / 255 * 5))) +
-                    (6 * (int) (round($g / 255 * 5))) +
-                    (int) (round($b / 255 * 5));
-        }
-    }
-
-    private function getSaturation(int $r, int $g, int $b): int
-    {
-        $r = $r / 255;
-        $g = $g / 255;
-        $b = $b / 255;
-        $v = max($r, $g, $b);
-
-        if (0 === $diff = $v - min($r, $g, $b)) {
-            return 0;
-        }
-
-        return (int) $diff * 100 / $v;
     }
 }

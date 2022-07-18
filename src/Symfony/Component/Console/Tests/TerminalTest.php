@@ -95,46 +95,34 @@ class TerminalTest extends TestCase
         $this->assertSame((int) $matches[1], $terminal->getWidth());
     }
 
-    public function testGetTermColorSupport()
+    /**
+     * @dataProvider provideTerminalColorEnv
+     */
+    public function testGetTermColorSupport(?string $testColorTerm, ?string $testTerm, AnsiColor $expected)
     {
-        $colorterm = getenv('COLORTERM');
-        $term = getenv('TERM');
+        $oriColorTerm = getenv('COLORTERM');
+        $oriTerm = getenv('TERM');
 
         try {
-            putenv('COLORTERM=truecolor');
-            putenv('TERM');
-            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
+            putenv($testColorTerm ? "COLORTERM={$testColorTerm}" : "COLORTERM");
+            putenv($testTerm ? "TERM={$testTerm}" : "TERM");
 
-            putenv('COLORTERM=TRUECOLOR');
-            putenv('TERM');
-            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM=somethingLike256Color');
-            putenv('TERM');
-            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM');
-            putenv('TERM=xterm-truecolor');
-            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM');
-            putenv('TERM=xterm-TRUECOLOR');
-            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM');
-            putenv('TERM=xterm-256color');
-            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM');
-            putenv('TERM=xterm-256COLOR');
-            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
-
-            putenv('COLORTERM');
-            putenv('TERM');
-            $this->assertSame(AnsiColor::Ansi4, Terminal::getTermColorSupport());
+            $this->assertSame($expected, Terminal::getTermColorSupport());
         } finally {
-            (false !== $colorterm) ? putenv('COLORTERM='.$colorterm) : putenv('COLORTERM');
-            (false !== $term) ? putenv('TERM='.$term) : putenv('TERM');
+            (false !== $oriColorTerm) ? putenv('COLORTERM='.$oriColorTerm) : putenv('COLORTERM');
+            (false !== $oriTerm) ? putenv('TERM='.$oriTerm) : putenv('TERM');
         }
+    }
+
+    public function provideTerminalColorEnv(): \Generator
+    {
+        yield ['truecolor', null, AnsiColor::Ansi24];
+        yield ['TRUECOLOR', null, AnsiColor::Ansi24];
+        yield ['somethingLike256Color', null, AnsiColor::Ansi8];
+        yield [null, 'xterm-truecolor', AnsiColor::Ansi24];
+        yield [null, 'xterm-TRUECOLOR', AnsiColor::Ansi24];
+        yield [null, 'xterm-256color', AnsiColor::Ansi8];
+        yield [null, 'xterm-256COLOR', AnsiColor::Ansi8];
+        yield [null, null, AnsiColor::Ansi4];
     }
 }

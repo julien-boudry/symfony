@@ -12,6 +12,7 @@
 namespace Symfony\Component\Console\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\AnsiColor;
 use Symfony\Component\Console\Terminal;
 
 class TerminalTest extends TestCase
@@ -102,35 +103,35 @@ class TerminalTest extends TestCase
         try {
             putenv('COLORTERM=truecolor');
             putenv('TERM');
-            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
 
             putenv('COLORTERM=TRUECOLOR');
             putenv('TERM');
-            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
 
             putenv('COLORTERM=somethingLike256Color');
             putenv('TERM');
-            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
 
             putenv('COLORTERM');
             putenv('TERM=xterm-truecolor');
-            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
 
             putenv('COLORTERM');
-            putenv('TERM=xterm-trueColor');
-            $this->assertSame('Ansi24', Terminal::getTermColorSupport());
+            putenv('TERM=xterm-TRUECOLOR');
+            $this->assertSame(AnsiColor::Ansi24, Terminal::getTermColorSupport());
 
             putenv('COLORTERM');
             putenv('TERM=xterm-256color');
-            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
 
             putenv('COLORTERM');
             putenv('TERM=xterm-256COLOR');
-            $this->assertSame('Ansi8', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi8, Terminal::getTermColorSupport());
 
             putenv('COLORTERM');
             putenv('TERM');
-            $this->assertSame('Ansi4', Terminal::getTermColorSupport());
+            $this->assertSame(AnsiColor::Ansi4, Terminal::getTermColorSupport());
         } finally {
             (false !== $colorterm) ? putenv('COLORTERM='.$colorterm) : putenv('COLORTERM');
             (false !== $term) ? putenv('TERM='.$term) : putenv('TERM');

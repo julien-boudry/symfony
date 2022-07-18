@@ -12,6 +12,7 @@
 namespace Symfony\Component\Console;
 
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Output\AnsiColor;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -149,11 +150,11 @@ final class Color
 
         $termSupport = Terminal::getTermColorSupport();
 
-        if ('Ansi4' === $termSupport) {
+        if (AnsiColor::Ansi4 === $termSupport) {
             return (string) $this->degradeHexColorToAnsi4($r, $g, $b);
         }
 
-        if ('Ansi8' === $termSupport) {
+        if (AnsiColor::Ansi8 === $termSupport) {
             return '8;5;'.((string) $this->degradeHexColorToAnsi8($r, $g, $b));
         }
 

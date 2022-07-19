@@ -68,7 +68,7 @@ enum AnsiColorCode
             return 0;
         }
 
-        return (round($b / 255) << 2) | (round($g / 255) << 1) | round($r / 255);
+        return (int) ((round($b / 255) << 2) | (round($g / 255) << 1) | round($r / 255));
     }
 
     private function getSaturation(int $r, int $g, int $b): int
@@ -82,7 +82,7 @@ enum AnsiColorCode
             return 0;
         }
 
-        return (int) $diff * 100 / $v;
+        return (int) ((int) $diff * 100 / $v);
     }
 
     /**

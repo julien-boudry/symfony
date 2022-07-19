@@ -14,7 +14,7 @@ namespace Symfony\Component\Console\Output;
 /**
  * @author Julien Boudry <julien@condorcet.vote>
  */
-enum AnsiColor
+enum AnsiColorCode
 {
     /*
      * Classical 4-bit Ansi colors, including 8 classical colors and 8 bright color. Output syntax is "ESC[${foreGroundColorcode};${backGroundColorcode}m"
@@ -29,7 +29,7 @@ enum AnsiColor
     case Ansi8;
     /*
      * 24-bit Ansi colors (RGB).
-     * Output syntax is: "ESC[38;5;${foreGroundColorcodeRed};${foreGroundColorcodeGreen};${foreGroundColorcodeBlue};48;5;${backGroundColorcodeRed};${backGroundColorcodeGreen};${backGroundColorcodeBlue}m"
+     * Output syntax is: "ESC[38;2;${foreGroundColorcodeRed};${foreGroundColorcodeGreen};${foreGroundColorcodeBlue};48;2;${backGroundColorcodeRed};${backGroundColorcodeGreen};${backGroundColorcodeBlue}m"
      * May be compatible with many modern terminals.
      */
     case Ansi24;

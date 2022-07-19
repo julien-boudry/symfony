@@ -16,7 +16,7 @@ use Symfony\Component\Console\Color;
 
 class ColorTest extends TestCase
 {
-    public function testAnsiColors()
+    public function testAnsiColorCodes()
     {
         $color = new Color();
         $this->assertSame(' ', $color->apply(' '));

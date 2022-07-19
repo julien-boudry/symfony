@@ -19,7 +19,7 @@ class Terminal
     private static ?int $height = null;
     private static ?bool $stty = null;
 
-    /*
+    /**
      * About Ansi color types: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
      * For more information about true color support with terminals https://github.com/termstandard/colors/
      */

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Output;
 
+use Symfony\Component\Asset\Exception\InvalidArgumentException;
+
 /**
  * @author Julien Boudry <julien@condorcet.vote>
  */
@@ -41,6 +43,16 @@ enum AnsiColorCode
      */
     public function convertFromHexToAnsiColorCode(string $hexColor): string
     {
+        $hexColor = str_replace('#', '', $hexColor);
+
+        if (3 === \strlen($hexColor)) {
+            $hexColor = $hexColor[0].$hexColor[0].$hexColor[1].$hexColor[1].$hexColor[2].$hexColor[2];
+        }
+
+        if (6 !== \strlen($hexColor)) {
+            throw new InvalidArgumentException(sprintf('Invalid "%s" color.', $hexColor));
+        }
+        
         $color = hexdec($hexColor);
 
         $r = ($color >> 16) & 255;

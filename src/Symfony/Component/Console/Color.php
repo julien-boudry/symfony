@@ -117,16 +117,6 @@ final class Color
         }
 
         if ('#' === $color[0]) {
-            $color = substr($color, 1);
-
-            if (3 === \strlen($color)) {
-                $color = $color[0].$color[0].$color[1].$color[1].$color[2].$color[2];
-            }
-
-            if (6 !== \strlen($color)) {
-                throw new InvalidArgumentException(sprintf('Invalid "%s" color.', $color));
-            }
-
             return ($background ? '4' : '3').Terminal::getTermColorSupport()->convertFromHexToAnsiColorCode($color);
         }
 

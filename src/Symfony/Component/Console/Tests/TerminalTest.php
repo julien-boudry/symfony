@@ -12,7 +12,7 @@
 namespace Symfony\Component\Console\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\AnsiColorCode;
+use Symfony\Component\Console\Output\AnsiColorMode;
 use Symfony\Component\Console\Terminal;
 
 class TerminalTest extends TestCase
@@ -98,7 +98,7 @@ class TerminalTest extends TestCase
     /**
      * @dataProvider provideTerminalColorEnv
      */
-    public function testGetTermColorSupport(?string $testColorTerm, ?string $testTerm, AnsiColorCode $expected)
+    public function testGetTermColorSupport(?string $testColorTerm, ?string $testTerm, AnsiColorMode $expected)
     {
         $oriColorTerm = getenv('COLORTERM');
         $oriTerm = getenv('TERM');
@@ -116,13 +116,13 @@ class TerminalTest extends TestCase
 
     public function provideTerminalColorEnv(): \Generator
     {
-        yield ['truecolor', null, AnsiColorCode::Ansi24];
-        yield ['TRUECOLOR', null, AnsiColorCode::Ansi24];
-        yield ['somethingLike256Color', null, AnsiColorCode::Ansi8];
-        yield [null, 'xterm-truecolor', AnsiColorCode::Ansi24];
-        yield [null, 'xterm-TRUECOLOR', AnsiColorCode::Ansi24];
-        yield [null, 'xterm-256color', AnsiColorCode::Ansi8];
-        yield [null, 'xterm-256COLOR', AnsiColorCode::Ansi8];
-        yield [null, null, AnsiColorCode::Ansi4];
+        yield ['truecolor', null, AnsiColorMode::Ansi24];
+        yield ['TRUECOLOR', null, AnsiColorMode::Ansi24];
+        yield ['somethingLike256Color', null, AnsiColorMode::Ansi8];
+        yield [null, 'xterm-truecolor', AnsiColorMode::Ansi24];
+        yield [null, 'xterm-TRUECOLOR', AnsiColorMode::Ansi24];
+        yield [null, 'xterm-256color', AnsiColorMode::Ansi8];
+        yield [null, 'xterm-256COLOR', AnsiColorMode::Ansi8];
+        yield [null, null, AnsiColorMode::Ansi4];
     }
 }

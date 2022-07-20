@@ -16,7 +16,7 @@ use Symfony\Component\Asset\Exception\InvalidArgumentException;
 /**
  * @author Julien Boudry <julien@condorcet.vote>
  */
-enum AnsiColorCode
+enum AnsiColorMode
 {
     /**
      * Classical 4-bit Ansi colors, including 8 classical colors and 8 bright color. Output syntax is "ESC[${foreGroundColorcode};${backGroundColorcode}m"
@@ -52,7 +52,7 @@ enum AnsiColorCode
         if (6 !== \strlen($hexColor)) {
             throw new InvalidArgumentException(sprintf('Invalid "%s" color.', $hexColor));
         }
-        
+
         $color = hexdec($hexColor);
 
         $r = ($color >> 16) & 255;
@@ -70,7 +70,8 @@ enum AnsiColorCode
     {
         return match ($this) {
             self::Ansi4 => $this->degradeHexColorToAnsi4($r, $g, $b),
-            self::Ansi8 => $this->degradeHexColorToAnsi8($r, $g, $b)
+            self::Ansi8 => $this->degradeHexColorToAnsi8($r, $g, $b),
+            default => throw new InvalidArgumentException("RGB cannot be converted to {$this->name}.")
         };
     }
 

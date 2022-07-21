@@ -50,7 +50,7 @@ enum AnsiColorMode
         }
 
         if (6 !== \strlen($hexColor)) {
-            throw new InvalidArgumentException(sprintf('Invalid "%s" color.', $hexColor));
+            throw new InvalidArgumentException(sprintf('Invalid "#%s" color.', $hexColor));
         }
 
         $color = hexdec($hexColor);

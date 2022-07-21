@@ -21,7 +21,7 @@ class Terminal
 
     /**
      * About Ansi color types: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
-     * For more information about true color support with terminals https://github.com/termstandard/colors/
+     * For more information about true color support with terminals https://github.com/termstandard/colors/.
      */
     public static function getTermColorSupport(): AnsiColorMode
     {

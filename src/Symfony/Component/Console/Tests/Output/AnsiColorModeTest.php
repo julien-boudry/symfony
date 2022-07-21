@@ -11,9 +11,9 @@
 
 namespace Symfony\Component\Console\Tests\Output;
 
-use Symfony\Component\Console\Output\AnsiColorMode;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Asset\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Output\AnsiColorMode;
 
 class AnsiColorModeTest extends TestCase
 {
